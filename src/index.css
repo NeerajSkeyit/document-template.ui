@@ -33,3 +33,43 @@
 body {
   margin: 0;
 }
+
+button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  height: 36px;
+  padding: 6px 12px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 8px;
+  justify-content: center;
+  transition: 0.2s ease;
+  text-transform: capitalize;
+  margin-right: 2px;
+}
+
+input {
+  height: 36px !important;
+  border: 1px solid #e0e5eb;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 0px 8px;
+  width: 100%;
+  background-color: white;
+  color: #404040;
+}
+
+input:focus {
+  outline: none;
+}
+
+.token {
+  border-style: dashed;
+}

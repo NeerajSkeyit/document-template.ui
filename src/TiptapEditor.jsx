@@ -31,7 +31,8 @@ export default function TiptapEditor({ editor }) {
         style={{
           border: "1px solid gray",
           borderRadius: 4,
-          padding: 10,
+          paddingLeft: 10,
+          paddingRight: 10,
         }}
       />
     </div>

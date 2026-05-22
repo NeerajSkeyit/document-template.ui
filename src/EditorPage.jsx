@@ -7,8 +7,17 @@ import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
 import TiptapEditor from "./TiptapEditor";
+import toast from "react-hot-toast";
 
-const TOKEN_LIST = ["name", "date", "amount"];
+const TOKEN_LIST = [
+  "employee_name",
+  "current_date",
+  "amount",
+  "Effective Date",
+  "day_number",
+  "month",
+  "year",
+];
 
 export default function EditorPage() {
   const [documents, setDocuments] = useState([]);
@@ -61,56 +70,79 @@ export default function EditorPage() {
   };
 
   const saveDocument = async () => {
-    await axios.post(
-      "https://document-template-services.onrender.com/documents",
-      {
-        title,
-        content,
-        tokens: selectedTokens,
+    if (!title || !content) return alert("Please fill all the fields");
+    try {
+      toast("Saving...");
+      await axios.post(
+        "https://document-template-services.onrender.com/documents",
+        {
+          title,
+          content,
+          tokens: selectedTokens,
 
-        headerHeight,
-        footerHeight,
+          headerHeight,
+          footerHeight,
 
-        headerImage,
-        footerImage,
-      }
-    );
-    alert("Saved");
+          headerImage,
+          footerImage,
+        }
+      );
+      alert("Saved");
+    } catch (e) {
+      console.error("error in saving", e, e.response);
+    } finally {
+      toast.dismiss();
+    }
   };
 
   const downloadDocument = async (id) => {
-    const response = await axios.get(
-      `https://document-template-services.onrender.com/download/${id}`,
-      {
-        responseType: "blob",
-      }
-    );
+    try {
+      toast("Downloading...");
+      const response = await axios.get(
+        `https://document-template-services.onrender.com/download/${id}`,
+        {
+          responseType: "blob",
+        }
+      );
 
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "document.pdf");
-    document.body.appendChild(link);
-    link.click();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "document.pdf");
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.log("error in downloading", error, error?.response);
+    } finally {
+      toast.dismiss();
+    }
   };
 
   const generateDocument = async (id) => {
-    const response = await axios.get(
-      `https://document-template-services.onrender.com/generate/${id}`,
-      {
-        responseType: "blob",
-      }
-    );
+    try {
+      toast("Generating...");
+      const response = await axios.get(
+        `https://document-template-services.onrender.com/generate/${id}`,
+        {
+          responseType: "blob",
+        }
+      );
 
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "document.pdf");
-    document.body.appendChild(link);
-    link.click();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "document.pdf");
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.log("error in generating", error, error?.response);
+    } finally {
+      toast.dismiss();
+    }
   };
 
   useEffect(() => {
+    toast("Fetching documents...");
     axios
       .get("https://document-template-services.onrender.com/documents")
       .then((res) => {
@@ -119,6 +151,9 @@ export default function EditorPage() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        toast.dismiss();
       });
   }, []);
 
